@@ -1,3 +1,4 @@
+import { create } from "domain";
 import database from "./database";
 import crypto from "crypto";
 const dbInstance = database.getInstance();
@@ -6,11 +7,13 @@ export class Profile {
   uuid: string;
   username: string;
   accessToken: string;
+  createdAt: Date;
 
   constructor(username: string, accessToken: string) {
     this.uuid = crypto.randomUUID(); // Generate a unique UUID
     this.username = username;
     this.accessToken = accessToken;
+    this.createdAt = new Date(Date.now());
   }
 
   async save(): Promise<boolean> {
@@ -19,6 +22,7 @@ export class Profile {
         uuid: this.uuid,
         username: this.username,
         accessToken: this.accessToken,
+        createdAt: this.createdAt,
       });
       return true;
     } catch (error) {
@@ -42,6 +46,7 @@ export class Profile {
       const profileData = await dbInstance.getData(`/profiles/${uuid}`);
       var profile = new Profile(profileData.username, profileData.accessToken);
       profile.uuid = profileData.uuid; // Set the UUID from the database
+      profile.createdAt = new Date(profileData.createdAt); // Set the createdAt date
       return profile;
     } catch (error) {
       console.error("Profile not found:", error);
@@ -58,6 +63,7 @@ export class Profile {
           profileData.accessToken
         );
         profile.uuid = profileData.uuid;
+        profile.createdAt = new Date(profileData.createdAt);
         return profile;
       });
     } catch (error) {
