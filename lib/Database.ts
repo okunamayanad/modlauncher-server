@@ -1,4 +1,4 @@
-import Database from "better-sqlite3";
+import { Database } from "bun:sqlite";
 
 // Initialize the database (create the database if it doesn't exist)
 const db = new Database("profiles.db");
