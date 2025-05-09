@@ -14,7 +14,7 @@ export async function createProfile(
   const profile = new Profile(username, accessToken);
   profile.save();
 
-  sendResponse(ws, "profile_created", {
+  sendResponse(ws, "profileCreated", {
     uuid: profile.uuid,
     username: profile.username,
   });
@@ -28,7 +28,7 @@ export async function getProfile(
   const profile = await Profile.fromDatabase(uuid);
 
   if (profile) {
-    sendResponse(ws, "profile_data", {
+    sendResponse(ws, "profileData", {
       uuid: profile.uuid,
       username: profile.username,
     });
@@ -57,7 +57,7 @@ export async function deleteProfile(
       return;
     }
 
-    sendResponse(ws, "profile_deleted", { uuid: profile.uuid });
+    sendResponse(ws, "profileDeleted", { uuid: profile.uuid });
   } catch (error) {
     sendError(ws, "An unexpected error occurred");
   }
@@ -67,5 +67,5 @@ export async function getAllProfiles(
   ws: ServerWebSocket<WebSocketData>
 ): Promise<void> {
   const profiles = await Profile.getAllProfiles();
-  sendResponse(ws, "all_profiles", profiles);
+  sendResponse(ws, "allProfiles", profiles);
 }

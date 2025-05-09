@@ -25,16 +25,16 @@ export const handleIncomingMessage = (
   try {
     const data = JSON.parse(message);
     switch (data.type) {
-      case "create_profile":
+      case "createProfile":
         createProfile(ws, data);
         break;
-      case "get_profile":
+      case "getProfile":
         getProfile(ws, data);
         break;
-      case "delete_profile":
+      case "deleteProfile":
         deleteProfile(ws, data);
         break;
-      case "get_all_profiles":
+      case "getAllProfiles":
         getAllProfiles(ws);
         break;
       default:

@@ -7,11 +7,19 @@ export class Instance {
   name: string;
   version: string;
   modLoader: "Vanilla" | "Forge" | "Fabric" | "Quilt" | "NeoForge";
+  mods: {
+    name: string;
+    version: string;
+    modrinth_id?: string;
+    file_name: string;
+    addedAt?: Date;
+    source: "modrinth" | "custom";
+  }[];
   allocatedMemory: {
     min: number;
     max: number;
   };
-  iconpath: string;
+  iconPath: string;
   createdAt: Date;
   lastPlayed: Date;
   resolution: {
@@ -23,30 +31,27 @@ export class Instance {
     name: string,
     version: string,
     modLoader: "Vanilla" | "Forge" | "Fabric" | "Quilt" | "NeoForge",
+    mods: {
+      name: string;
+      version: string;
+      modrinth_id?: string;
+      file_name: string;
+      addedAt: Date;
+      source: "modrinth" | "custom";
+    }[],
     allocatedMemory: { min: number; max: number },
     iconpath: string,
     resolution: { width: number; height: number }
   ) {
-    this.uuid = crypto.randomUUID(); // Generate a unique UUID
+    this.uuid = crypto.randomUUID();
     this.name = name;
     this.version = version;
     this.modLoader = modLoader;
+    this.mods = mods;
     this.allocatedMemory = allocatedMemory;
-    this.iconpath = iconpath;
+    this.iconPath = iconpath;
     this.createdAt = new Date();
     this.lastPlayed = new Date();
     this.resolution = resolution;
-
-    dbInstance.push(`/instances/${this.uuid}`, {
-      uuid: this.uuid,
-      name: this.name,
-      version: this.version,
-      modLoader: this.modLoader,
-      allocatedMemory: this.allocatedMemory,
-      iconpath: this.iconpath,
-      createdAt: this.createdAt,
-      lastPlayed: this.lastPlayed,
-      resolution: this.resolution,
-    });
   }
 }
