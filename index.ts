@@ -11,11 +11,17 @@ Bun.serve({
       GET: () => new Response("Launch an instance"),
       POST: async (req) => {
         const body = (await req.json()) as {
-          instance_id: number;
-          profile_id: number;
+          instance_uuid: string;
+          profile_uuid: string;
         };
-        const { instance_id, profile_id } = body;
+        const { instance_uuid, profile_uuid } = body;
 
+        return Response.json();
+      },
+    },
+
+    "/api/instances": {
+      GET: async (req) => {
         return Response.json();
       },
     },

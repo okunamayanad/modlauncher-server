@@ -10,6 +10,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@xmcl/user": "^4.2.0",
     "minecraft-launcher-core": "^3.18.2"
   }
 }
