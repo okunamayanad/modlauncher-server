@@ -2,7 +2,7 @@ import {
   handleWebSocketConnection,
   handleIncomingMessage,
   type WebSocketData,
-} from "./lib/WebsocketHandlers";
+} from "./lib/websocketHandlers";
 
 // A Map to store connected clients
 const clients = new Map<string, WebSocket>();

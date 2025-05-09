@@ -4,7 +4,7 @@ import {
   getProfile,
   deleteProfile,
   getAllProfiles,
-} from "./ProfileHandlers";
+} from "./profileHandlers";
 
 export interface WebSocketData {
   clientId: string;

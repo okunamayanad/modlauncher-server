@@ -1,5 +1,5 @@
 import { JsonDB, Config } from "node-json-db";
-import Paths from "./Paths";
+import Paths from "./paths";
 import { join } from "path";
 import { mkdirSync } from "fs";
 

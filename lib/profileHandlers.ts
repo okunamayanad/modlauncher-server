@@ -3,8 +3,8 @@ import {
   sendResponse,
   sendError,
   type WebSocketData,
-} from "./WebsocketHandlers";
-import { Profile } from "./Profile";
+} from "./websocketHandlers";
+import { Profile } from "./profile";
 
 export async function createProfile(
   ws: ServerWebSocket<WebSocketData>,
