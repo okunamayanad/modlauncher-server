@@ -28,4 +28,14 @@ export class Profile {
       return null;
     }
   }
+
+  static async delete(uuid: string): Promise<boolean> {
+    try {
+      await dbInstance.delete(`/profiles/${uuid}`);
+      return true;
+    } catch (error) {
+      console.error("Failed to delete profile:", error);
+      return false;
+    }
+  }
 }
