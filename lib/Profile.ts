@@ -19,16 +19,6 @@ export class Profile {
     });
   }
 
-  static async fromDatabase(uuid: string): Promise<Profile | null> {
-    try {
-      const profileData = await dbInstance.getData(`/profiles/${uuid}`);
-      return new Profile(profileData.username, profileData.accessToken);
-    } catch (error) {
-      console.error("Profile not found:", error);
-      return null;
-    }
-  }
-
   static async delete(uuid: string): Promise<boolean> {
     try {
       await dbInstance.delete(`/profiles/${uuid}`);
@@ -36,6 +26,18 @@ export class Profile {
     } catch (error) {
       console.error("Failed to delete profile:", error);
       return false;
+    }
+  }
+
+  static async fromDatabase(uuid: string): Promise<Profile | null> {
+    try {
+      const profileData = await dbInstance.getData(`/profiles/${uuid}`);
+      var profile = new Profile(profileData.username, profileData.accessToken);
+      profile.uuid = profileData.uuid; // Set the UUID from the database
+      return profile;
+    } catch (error) {
+      console.error("Profile not found:", error);
+      return null;
     }
   }
 }
