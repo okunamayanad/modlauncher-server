@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "latest"
   },
   "peerDependencies": {
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "@xmcl/user": "^4.2.0",
+    "better-sqlite3": "^11.10.0",
     "minecraft-launcher-core": "^3.18.2"
   }
 }
