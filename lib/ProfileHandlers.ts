@@ -17,3 +17,28 @@ export async function createProfile(
     })
   );
 }
+
+export async function getProfile(
+  ws: ServerWebSocket<WebSocketData>,
+  data: any
+): Promise<void> {
+  const { uuid } = data;
+  const profile = await Profile.fromDatabase(uuid);
+
+  if (profile) {
+    ws.send(
+      JSON.stringify({
+        type: "profile_data",
+        uuid: profile.uuid,
+        username: profile.username,
+      })
+    );
+  } else {
+    ws.send(
+      JSON.stringify({
+        type: "error",
+        message: "Profile not found",
+      })
+    );
+  }
+}

@@ -1,5 +1,5 @@
 import type { ServerWebSocket } from "bun";
-import { createProfile } from "./ProfileHandlers";
+import { createProfile, getProfile } from "./ProfileHandlers";
 
 export interface WebSocketData {
   clientId: string;
@@ -22,6 +22,9 @@ export const handleIncomingMessage = (
     switch (data.type) {
       case "create_profile":
         createProfile(ws, data);
+        break;
+      case "get_profile":
+        getProfile(ws, data);
         break;
       default:
         sendError(ws, "Unknown message type");
