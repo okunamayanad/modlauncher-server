@@ -1,4 +1,3 @@
-import { create } from "domain";
 import database from "./database";
 import crypto from "crypto";
 const dbInstance = database.getInstance();
