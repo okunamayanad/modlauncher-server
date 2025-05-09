@@ -31,6 +31,12 @@ export class Profile {
     }
   }
 
+  async updateProfile(username: string, accessToken: string): Promise<boolean> {
+    this.username = username;
+    this.accessToken = accessToken;
+    return this.save();
+  }
+
   async delete(): Promise<boolean> {
     try {
       await dbInstance.delete(`/profiles/${this.uuid}`);

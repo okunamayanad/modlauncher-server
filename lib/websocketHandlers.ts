@@ -2,6 +2,7 @@ import type { ServerWebSocket } from "bun";
 import {
   createProfile,
   getProfile,
+  updateProfile,
   deleteProfile,
   getAllProfiles,
 } from "./profileHandlers";
@@ -30,6 +31,9 @@ export const handleIncomingMessage = (
         break;
       case "getProfile":
         getProfile(ws, data);
+        break;
+      case "updateProfile":
+        updateProfile(ws, data);
         break;
       case "deleteProfile":
         deleteProfile(ws, data);

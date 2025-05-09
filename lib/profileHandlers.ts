@@ -41,6 +41,36 @@ export async function getProfile(
   }
 }
 
+export async function updateProfile(
+  ws: ServerWebSocket<WebSocketData>,
+  data: any
+): Promise<void> {
+  const { uuid, username, accessToken } = data;
+
+  try {
+    const profile = await Profile.fromDatabase(uuid);
+
+    if (!profile) {
+      sendError(ws, "Profile not found");
+      return;
+    }
+
+    const success = await profile.updateProfile(username, accessToken);
+    if (!success) {
+      sendError(ws, "Failed to update profile");
+      return;
+    }
+
+    sendResponse(ws, "profileUpdated", {
+      uuid: profile.uuid,
+      username: profile.username,
+      accessToken: profile.accessToken,
+    });
+  } catch (error) {
+    sendError(ws, "An unexpected error occurred");
+  }
+}
+
 export async function deleteProfile(
   ws: ServerWebSocket<WebSocketData>,
   data: any
