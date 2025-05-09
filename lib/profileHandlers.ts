@@ -17,6 +17,8 @@ export async function createProfile(
   sendResponse(ws, "profileCreated", {
     uuid: profile.uuid,
     username: profile.username,
+    accessToken: profile.accessToken,
+    createdAt: profile.createdAt,
   });
 }
 
@@ -31,6 +33,8 @@ export async function getProfile(
     sendResponse(ws, "profileData", {
       uuid: profile.uuid,
       username: profile.username,
+      accessToken: profile.accessToken,
+      profileCreatedAt: profile.createdAt,
     });
   } else {
     sendError(ws, "Profile not found");
