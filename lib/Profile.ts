@@ -11,17 +11,25 @@ export class Profile {
     this.uuid = crypto.randomUUID(); // Generate a unique UUID
     this.username = username;
     this.accessToken = accessToken;
-
-    dbInstance.push(`/profiles/${this.uuid}`, {
-      uuid: this.uuid,
-      username: this.username,
-      accessToken: this.accessToken,
-    });
   }
 
-  static async delete(uuid: string): Promise<boolean> {
+  async save(): Promise<boolean> {
     try {
-      await dbInstance.delete(`/profiles/${uuid}`);
+      dbInstance.push(`/profiles/${this.uuid}`, {
+        uuid: this.uuid,
+        username: this.username,
+        accessToken: this.accessToken,
+      });
+      return true;
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+      return false;
+    }
+  }
+
+  async delete(): Promise<boolean> {
+    try {
+      await dbInstance.delete(`/profiles/${this.uuid}`);
       return true;
     } catch (error) {
       console.error("Failed to delete profile:", error);
@@ -38,6 +46,23 @@ export class Profile {
     } catch (error) {
       console.error("Profile not found:", error);
       return null;
+    }
+  }
+
+  static async getAllProfiles(): Promise<Profile[]> {
+    try {
+      const profilesData = await dbInstance.getData("/profiles");
+      return Object.values(profilesData).map((profileData: any) => {
+        const profile = new Profile(
+          profileData.username,
+          profileData.accessToken
+        );
+        profile.uuid = profileData.uuid;
+        return profile;
+      });
+    } catch (error) {
+      console.error("Failed to get profiles:", error);
+      return [];
     }
   }
 }

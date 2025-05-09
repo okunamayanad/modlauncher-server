@@ -1,5 +1,9 @@
 import type { ServerWebSocket } from "bun";
-import type { WebSocketData } from "./WebsocketHandlers";
+import {
+  sendResponse,
+  sendError,
+  type WebSocketData,
+} from "./WebsocketHandlers";
 import { Profile } from "./Profile";
 
 export async function createProfile(
@@ -8,14 +12,12 @@ export async function createProfile(
 ): Promise<void> {
   const { username, accessToken } = data;
   const profile = new Profile(username, accessToken);
+  profile.save();
 
-  ws.send(
-    JSON.stringify({
-      type: "profile_created",
-      uuid: profile.uuid,
-      username: profile.username,
-    })
-  );
+  sendResponse(ws, "profile_created", {
+    uuid: profile.uuid,
+    username: profile.username,
+  });
 }
 
 export async function getProfile(
@@ -26,19 +28,44 @@ export async function getProfile(
   const profile = await Profile.fromDatabase(uuid);
 
   if (profile) {
-    ws.send(
-      JSON.stringify({
-        type: "profile_data",
-        uuid: profile.uuid,
-        username: profile.username,
-      })
-    );
+    sendResponse(ws, "profile_data", {
+      uuid: profile.uuid,
+      username: profile.username,
+    });
   } else {
-    ws.send(
-      JSON.stringify({
-        type: "error",
-        message: "Profile not found",
-      })
-    );
+    sendError(ws, "Profile not found");
   }
+}
+
+export async function deleteProfile(
+  ws: ServerWebSocket<WebSocketData>,
+  data: any
+): Promise<void> {
+  const { uuid } = data;
+
+  try {
+    const profile = await Profile.fromDatabase(uuid);
+
+    if (!profile) {
+      sendError(ws, "Profile not found");
+      return;
+    }
+
+    const success = await profile.delete();
+    if (!success) {
+      sendError(ws, "Failed to delete profile");
+      return;
+    }
+
+    sendResponse(ws, "profile_deleted", { uuid: profile.uuid });
+  } catch (error) {
+    sendError(ws, "An unexpected error occurred");
+  }
+}
+
+export async function getAllProfiles(
+  ws: ServerWebSocket<WebSocketData>
+): Promise<void> {
+  const profiles = await Profile.getAllProfiles();
+  sendResponse(ws, "all_profiles", profiles);
 }

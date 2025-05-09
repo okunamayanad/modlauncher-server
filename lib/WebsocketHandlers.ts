@@ -1,5 +1,10 @@
 import type { ServerWebSocket } from "bun";
-import { createProfile, getProfile } from "./ProfileHandlers";
+import {
+  createProfile,
+  getProfile,
+  deleteProfile,
+  getAllProfiles,
+} from "./ProfileHandlers";
 
 export interface WebSocketData {
   clientId: string;
@@ -26,6 +31,12 @@ export const handleIncomingMessage = (
       case "get_profile":
         getProfile(ws, data);
         break;
+      case "delete_profile":
+        deleteProfile(ws, data);
+        break;
+      case "get_all_profiles":
+        getAllProfiles(ws);
+        break;
       default:
         sendError(ws, "Unknown message type");
     }
@@ -34,6 +45,22 @@ export const handleIncomingMessage = (
   }
 };
 
-export const sendError = <T>(ws: ServerWebSocket<T>, message: string) => {
-  ws.send(JSON.stringify({ type: "error", message }));
-};
+export function sendResponse(
+  ws: ServerWebSocket<WebSocketData>,
+  type: string,
+  payload: Record<string, any>
+): void {
+  ws.send(JSON.stringify({ type, ...payload }));
+}
+
+export function sendError(
+  ws: ServerWebSocket<WebSocketData>,
+  message: string
+): void {
+  ws.send(
+    JSON.stringify({
+      type: "error",
+      message,
+    })
+  );
+}
