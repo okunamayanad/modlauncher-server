@@ -1,5 +1,5 @@
 import { JsonDB, Config } from "node-json-db";
-import Paths from "./paths";
+import paths from "./paths";
 import { join } from "path";
 import { mkdirSync } from "fs";
 
@@ -11,10 +11,10 @@ class Database {
   public static getInstance(): JsonDB {
     if (!Database.instance) {
       // Ensure the directory exists
-      mkdirSync(Paths.data, { recursive: true });
+      mkdirSync(paths.data, { recursive: true });
 
       // Define the full path to the database file
-      const dbPath = join(Paths.data, "profiles");
+      const dbPath = join(paths.data, "profiles");
 
       // Initialize the database
       Database.instance = new JsonDB(new Config(dbPath, true, false, "/"));

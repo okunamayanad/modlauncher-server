@@ -1,6 +1,6 @@
-import Database from "./database";
+import database from "./database";
 import crypto from "crypto";
-const dbInstance = Database.getInstance();
+const dbInstance = database.getInstance();
 
 export class Profile {
   uuid: string;
