@@ -1,3 +1,4 @@
+import { access } from "fs";
 import { Profile } from "./lib/Profile.ts";
 import type { ServerWebSocket } from "bun";
 
@@ -39,15 +40,14 @@ const handlers = {
   },
 
   createProfile: async (ws: ServerWebSocket<WebSocketData>, data: any) => {
-    const { username, password } = data;
-    const profile = new Profile(username, password);
+    const { username, accessToken } = data;
+    const profile = new Profile(username, accessToken);
 
     ws.send(
       JSON.stringify({
         type: "profile_created",
         uuid: profile.uuid,
         username: profile.username,
-        password: profile.password,
       })
     );
   },

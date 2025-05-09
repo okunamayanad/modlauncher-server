@@ -1,15 +1,27 @@
-import { Database } from "bun:sqlite";
+import { JsonDB, Config } from "node-json-db";
+import Paths from "./Paths";
+import { join } from "path";
+import { mkdirSync } from "fs";
 
-// Initialize the database (create the database if it doesn't exist)
-const db = new Database("profiles.db");
+class Database {
+  private static instance: JsonDB;
 
-// Create the 'profiles' table if it doesn't exist
-db.exec(`
-  CREATE TABLE IF NOT EXISTS profiles (
-    uuid TEXT PRIMARY KEY,
-    username TEXT NOT NULL,
-    password TEXT NOT NULL
-  );
-`);
+  private constructor() {} // Prevent direct instantiation
 
-export { db };
+  public static getInstance(): JsonDB {
+    if (!Database.instance) {
+      // Ensure the directory exists
+      mkdirSync(Paths.data, { recursive: true });
+
+      // Define the full path to the database file
+      const dbPath = join(Paths.data, "profiles");
+
+      // Initialize the database
+      Database.instance = new JsonDB(new Config(dbPath, true, false, "/"));
+    }
+
+    return Database.instance;
+  }
+}
+
+export default Database;
