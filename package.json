@@ -11,6 +11,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@xmcl/modrinth": "^2.4.0",
     "@xmcl/user": "^4.2.0",
     "env-paths": "^3.0.0",
     "minecraft-launcher-core": "^3.18.2",
