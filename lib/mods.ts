@@ -9,7 +9,7 @@ const client = new ModrinthV2Client();
 export async function getModFromModrinth(
   projectId: string,
   gameVersion: string,
-  modLoader: "Vanilla" | "Forge" | "Fabric" | "Quilt" | "NeoForge"
+  modLoader: "Forge" | "Fabric" | "Quilt" | "NeoForge"
 ) {
   mkdirSync(join(modsDir, gameVersion), { recursive: true });
 

@@ -1,18 +1,26 @@
+import {
+  Authenticator,
+  Client,
+  type ILauncherOptions,
+} from "minecraft-launcher-core";
+import { join } from "path";
+import paths from "./paths";
 import database from "./database";
 import crypto from "crypto";
 const dbInstance = database.getInstance();
+const launcher = new Client();
 
 export class Instance {
   uuid: string;
   name: string;
-  version: string;
+  versionNumber: string;
+  versionType: "release" | "snapshot";
   modLoader: "Vanilla" | "Forge" | "Fabric" | "Quilt" | "NeoForge";
   mods: {
     name: string;
-    version: string;
     modrinth_id?: string;
-    file_name: string;
-    addedAt?: Date;
+    version: string;
+    addedAt: Date;
     source: "modrinth" | "custom";
   }[];
   allocatedMemory: {
@@ -26,16 +34,17 @@ export class Instance {
     width: number;
     height: number;
   };
+  options: Record<string, any>;
 
   constructor(
     name: string,
     version: string,
+    versionType: "release" | "snapshot",
     modLoader: "Vanilla" | "Forge" | "Fabric" | "Quilt" | "NeoForge",
     mods: {
       name: string;
-      version: string;
       modrinth_id?: string;
-      file_name: string;
+      version: string;
       addedAt: Date;
       source: "modrinth" | "custom";
     }[],
@@ -45,7 +54,8 @@ export class Instance {
   ) {
     this.uuid = crypto.randomUUID();
     this.name = name;
-    this.version = version;
+    this.versionNumber = version;
+    this.versionType = versionType;
     this.modLoader = modLoader;
     this.mods = mods;
     this.allocatedMemory = allocatedMemory;
@@ -53,6 +63,38 @@ export class Instance {
     this.createdAt = new Date();
     this.lastPlayed = new Date();
     this.resolution = resolution;
+    this.options = {
+      root: join(paths.data, "instances", this.uuid),
+      version: {
+        number: this.versionNumber,
+        type: this.versionType,
+      },
+      memory: {
+        min: this.allocatedMemory.min,
+        max: this.allocatedMemory.max,
+      },
+      window: {
+        width: this.resolution.width,
+        height: this.resolution.height,
+      },
+    };
+  }
+
+  async launch(): Promise<void> {
+    try {
+      let authorization = await Authenticator.getAuth("username");
+      let opts: ILauncherOptions = {
+        root: this.options.root,
+        version: this.options.version,
+        memory: this.options.memory,
+        window: this.options.window,
+        authorization,
+      };
+      await launcher.launch(opts);
+      console.log("Instance launched successfully");
+    } catch (error) {
+      console.error("Failed to launch instance:", error);
+    }
   }
 
   async save(): Promise<boolean> {
@@ -60,7 +102,7 @@ export class Instance {
       dbInstance.push(`/instances/${this.uuid}`, {
         uuid: this.uuid,
         name: this.name,
-        version: this.version,
+        version: this.versionNumber,
         modLoader: this.modLoader,
         mods: this.mods,
         allocatedMemory: this.allocatedMemory,
@@ -82,9 +124,8 @@ export class Instance {
     modLoader: "Vanilla" | "Forge" | "Fabric" | "Quilt" | "NeoForge",
     mods: {
       name: string;
-      version: string;
       modrinth_id?: string;
-      file_name: string;
+      version: string;
       addedAt: Date;
       source: "modrinth" | "custom";
     }[],
@@ -93,7 +134,7 @@ export class Instance {
     resolution: { width: number; height: number }
   ): Promise<boolean> {
     this.name = name;
-    this.version = version;
+    this.versionNumber = version;
     this.modLoader = modLoader;
     this.mods = mods;
     this.allocatedMemory = allocatedMemory;
@@ -119,6 +160,7 @@ export class Instance {
       const instance = new Instance(
         instanceData.name,
         instanceData.version,
+        instanceData.versionType,
         instanceData.modLoader,
         instanceData.mods,
         instanceData.allocatedMemory,
@@ -141,6 +183,7 @@ export class Instance {
         const instance = new Instance(
           instanceData.name,
           instanceData.version,
+          instanceData.versionType,
           instanceData.modLoader,
           instanceData.mods,
           instanceData.allocatedMemory,
