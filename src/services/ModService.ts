@@ -114,17 +114,18 @@ export class ModService {
         limit: 20,
       };
 
+      const facets: string[][] = [];
+
       if (gameVersion) {
-        searchParams.facets = [["versions:" + gameVersion]];
+        facets.push(["versions:" + gameVersion]);
       }
 
       if (modLoader) {
-        const loaderFacet = ["categories:" + modLoader.toLowerCase()];
-        if (searchParams.facets) {
-          searchParams.facets.push(loaderFacet);
-        } else {
-          searchParams.facets = [loaderFacet];
-        }
+        facets.push(["categories:" + modLoader.toLowerCase()]);
+      }
+
+      if (facets.length > 0) {
+        searchParams.facets = JSON.stringify(facets);
       }
 
       const results = await this.client.searchProjects(searchParams);
