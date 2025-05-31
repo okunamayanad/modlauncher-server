@@ -10,10 +10,10 @@ export async function createInstance(
   ws: ServerWebSocket<WebSocketData>,
   data: any
 ): Promise<void> {
-  const { name, version, versionType, modLoader, mods, allocatedMemory, iconPath, resolution } = data;
+  const { name, versionNumber, versionType, modLoader, mods, allocatedMemory, iconPath, resolution } = data;
   const instance = new Instance(
     name,
-    version,
+    versionNumber,
     versionType,
     modLoader,
     mods,

@@ -6,6 +6,10 @@ import {
   deleteProfile,
   getAllProfiles,
 } from "./profileHandlers";
+import {
+  createInstance,
+  launchInstance,
+} from "./instanceHandlers";
 
 export interface WebSocketData {
   clientId: string;
@@ -40,6 +44,12 @@ export const handleIncomingMessage = (
         break;
       case "getAllProfiles":
         getAllProfiles(ws);
+        break;
+      case "createInstance":
+        createInstance(ws, data);
+        break;
+      case "launchInstance":
+        launchInstance(ws, data);
         break;
       default:
         sendError(ws, "Unknown message type");
