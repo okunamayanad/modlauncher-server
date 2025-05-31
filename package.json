@@ -1,6 +1,6 @@
 {
   "name": "modlauncher-server",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
@@ -16,5 +16,8 @@
     "env-paths": "^3.0.0",
     "minecraft-launcher-core": "^3.18.2",
     "node-json-db": "^2.3.1"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts"
   }
 }
