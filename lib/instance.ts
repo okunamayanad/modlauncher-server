@@ -102,7 +102,8 @@ export class Instance {
       dbInstance.push(`/instances/${this.uuid}`, {
         uuid: this.uuid,
         name: this.name,
-        version: this.versionNumber,
+        versionNumber: this.versionNumber,
+        versionType: this.versionType,
         modLoader: this.modLoader,
         mods: this.mods,
         allocatedMemory: this.allocatedMemory,
@@ -120,7 +121,8 @@ export class Instance {
 
   async updateInstance(
     name: string,
-    version: string,
+    versionNumber: string,
+    versionType: "release" | "snapshot",
     modLoader: "Vanilla" | "Forge" | "Fabric" | "Quilt" | "NeoForge",
     mods: {
       name: string;
@@ -134,7 +136,8 @@ export class Instance {
     resolution: { width: number; height: number }
   ): Promise<boolean> {
     this.name = name;
-    this.versionNumber = version;
+    this.versionNumber = versionNumber;
+    this.versionType = versionType;
     this.modLoader = modLoader;
     this.mods = mods;
     this.allocatedMemory = allocatedMemory;
@@ -159,7 +162,7 @@ export class Instance {
       const instanceData = await dbInstance.getData(`/instances/${uuid}`);
       const instance = new Instance(
         instanceData.name,
-        instanceData.version,
+        instanceData.versionNumber,
         instanceData.versionType,
         instanceData.modLoader,
         instanceData.mods,
@@ -182,7 +185,7 @@ export class Instance {
       return Object.values(instancesData).map((instanceData: any) => {
         const instance = new Instance(
           instanceData.name,
-          instanceData.version,
+          instanceData.versionNumber,
           instanceData.versionType,
           instanceData.modLoader,
           instanceData.mods,

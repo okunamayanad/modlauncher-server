@@ -78,3 +78,15 @@ export function sendError(
     })
   );
 }
+
+export function sendGameLog(
+  ws: ServerWebSocket<WebSocketData>,
+  log: string,
+  instanceUuid: string | null = null
+): void {
+  ws.send(JSON.stringify({
+    type: `log@${instanceUuid || "global"}`,
+    message: log,
+    timestamp: new Date().toISOString(),
+  }));
+}
