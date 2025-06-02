@@ -15,9 +15,12 @@
     "@xmcl/user": "^4.2.0",
     "env-paths": "^3.0.0",
     "minecraft-launcher-core": "^3.18.2",
-    "node-json-db": "^2.3.1"
+    "node-json-db": "^2.3.1",
+    "node-systray-v2": "https://github.com/Edgar-P-yan/node-systray-v2",
+    "open": "^10.1.2"
   },
   "scripts": {
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "dev": "bun run src/index.ts --watch"
   }
 }
