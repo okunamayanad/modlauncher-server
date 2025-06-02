@@ -22,6 +22,7 @@ The server is organized into several layers for maintainability and scalability:
 - **DatabaseService**: JSON database management
 - **MinecraftLauncherService**: Minecraft launching functionality
 - **ModService**: Mod management and Modrinth integration
+- **TrayService**: System tray management with application controls
 
 ### Utils
 - **Logger**: Centralized logging system
@@ -52,7 +53,8 @@ src/
 ├── services/
 │   ├── DatabaseService.ts    # Database operations
 │   ├── MinecraftLauncherService.ts  # Minecraft launching
-│   └── ModService.ts         # Mod management
+│   ├── ModService.ts         # Mod management
+│   └── TrayService.ts        # Tray icon management
 ├── types/
 │   ├── WebSocket.ts          # WebSocket type definitions
 │   ├── Profile.ts            # Profile type definitions
